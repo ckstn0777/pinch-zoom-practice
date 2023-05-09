@@ -14,5 +14,8 @@
     "gh-pages": "^5.0.0",
     "typescript": "^5.0.2",
     "vite": "^4.3.2"
+  },
+  "prettier": {
+    "printWidth": 90
   }
 }
