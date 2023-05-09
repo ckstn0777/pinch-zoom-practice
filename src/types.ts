@@ -8,3 +8,8 @@ export type PinchZoomParameters = {
   setState: (state: TransformState) => void;
   getState: () => TransformState;
 };
+
+export type TouchMove = {
+  event: TouchEvent;
+  onPinch: ({ zoom }: { zoom: number }) => void;
+};
