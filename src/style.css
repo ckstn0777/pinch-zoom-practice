@@ -71,6 +71,7 @@ body {
 #screen {
   margin: 16px;
   background-color: #ececec;
+  overflow: hidden;
 }
 
 #img-wrapper {
