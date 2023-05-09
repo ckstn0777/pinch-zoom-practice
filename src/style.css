@@ -64,6 +64,10 @@ button:focus-visible {
 }
 
 /********** Style 추가 ********/
+body {
+  touch-action: pan-y;
+}
+
 #screen {
   margin: 16px;
   background-color: #ececec;
