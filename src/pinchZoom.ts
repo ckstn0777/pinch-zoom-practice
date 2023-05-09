@@ -64,7 +64,13 @@ export default function pinchZoom({
   getState,
 }: PinchZoomParameters) {
   const handlePinch = ({ zoom }: { zoom: number }) => {
-    console.log("zoom :", zoom);
+    if (zoom === 0) return;
+    // console.log("zoom :", zoom);
+
+    const { scale } = getState();
+    const zoomWeight = 0.02;
+    const nextScale = scale + (zoom > 0 ? zoomWeight : -zoomWeight);
+    setState({ scale: nextScale });
   };
 
   screen.addEventListener("touchstart", (event) => touchStartHandler({ event }));
