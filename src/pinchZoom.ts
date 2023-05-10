@@ -1,4 +1,4 @@
-import { PinchZoomParameters, TouchMove } from "./types";
+import { HandlePinchZoomParameters, PinchZoomParameters, TouchMove } from "./types";
 
 const evHistory: Touch[] = [];
 let prevDistance = -1; // 이전 거리
@@ -48,7 +48,10 @@ function touchMoveHandler({ event, onPinch }: TouchMove) {
         // 첫 핀치의 경우 비교군이 없으므로 prevDiff가 -1인 경우 생략한다.
         if (prevDistance > 0) {
           const zoom = distance - prevDistance;
-          onPinch({ zoom });
+          const x = 0;
+          const y = 0;
+
+          onPinch({ zoom, x: x, y: y });
         }
 
         prevDistance = distance;
@@ -57,20 +60,22 @@ function touchMoveHandler({ event, onPinch }: TouchMove) {
   }
 }
 
-export default function pinchZoom({
-  screen,
-  target,
-  setState,
-  getState,
-}: PinchZoomParameters) {
-  const handlePinch = ({ zoom }: { zoom: number }) => {
+export default function pinchZoom({ screen, setState, getState }: PinchZoomParameters) {
+  const handlePinch = ({ zoom, x: centerX, y: centerY }: HandlePinchZoomParameters) => {
     if (zoom === 0) return;
     // console.log("zoom :", zoom);
 
-    const { scale } = getState();
+    const { x, y, scale } = getState();
     const zoomWeight = 0.02;
     const nextScale = scale + (zoom > 0 ? zoomWeight : -zoomWeight);
-    setState({ scale: nextScale });
+
+    const nextState = {
+      x: x,
+      y: y,
+      scale: nextScale,
+    };
+
+    setState(nextState);
   };
 
   screen.addEventListener("touchstart", (event) => touchStartHandler({ event }));
