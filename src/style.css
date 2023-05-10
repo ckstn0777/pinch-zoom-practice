@@ -75,7 +75,8 @@ body {
 }
 
 #img-wrapper {
-  transform: scale(0.5);
+  transform-origin: top left;
+  transform: scale(1);
 }
 
 .album-img {

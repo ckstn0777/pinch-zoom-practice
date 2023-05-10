@@ -48,10 +48,20 @@ function touchMoveHandler({ event, onPinch }: TouchMove) {
         // 첫 핀치의 경우 비교군이 없으므로 prevDiff가 -1인 경우 생략한다.
         if (prevDistance > 0) {
           const zoom = distance - prevDistance;
-          const x = 0;
-          const y = 0;
 
-          onPinch({ zoom, x: x, y: y });
+          // 두 터치의 중심점을 구한다
+          const x = (evHistory[0].clientX + evHistory[1].clientX) / 2;
+          const y = (evHistory[0].clientY + evHistory[1].clientY) / 2;
+          //console.log(x, y);
+
+          // screen의 top, left 좌표를 구한다
+          const { top, left } = (
+            event.currentTarget as HTMLElement
+          ).getBoundingClientRect();
+
+          // x - left, y - top을 통해 screen 내부의 좌표로 변환한다 (상관없는 screen 기준을 제거하는 느낌)
+          // 고정축을 (0, 0)으로 변환하는 로직인거 같다
+          onPinch({ zoom, x: x - left, y: y - top });
         }
 
         prevDistance = distance;
@@ -64,14 +74,29 @@ export default function pinchZoom({ screen, setState, getState }: PinchZoomParam
   const handlePinch = ({ zoom, x: centerX, y: centerY }: HandlePinchZoomParameters) => {
     if (zoom === 0) return;
     // console.log("zoom :", zoom);
+    // console.log("centerX :", centerX);
+    // console.log("centerY :", centerY);
 
     const { x, y, scale } = getState();
+
     const zoomWeight = 0.02;
     const nextScale = scale + (zoom > 0 ? zoomWeight : -zoomWeight);
 
+    // console.log("x :", x);
+    // console.log("y :", y);
+
+    const biasX = (centerX - x) * ((zoom > 0 ? zoomWeight : -zoomWeight) / scale);
+    const biasY = (centerY - y) * ((zoom > 0 ? zoomWeight : -zoomWeight) / scale);
+
+    // console.log("biasX :", biasX);
+    // console.log("biasY :", biasY);
+
+    const nextX = x - biasX;
+    const nextY = y - biasY;
+
     const nextState = {
-      x: x,
-      y: y,
+      x: nextX,
+      y: nextY,
       scale: nextScale,
     };
 

@@ -6,7 +6,7 @@ export function touchInit(screen: HTMLElement, target: HTMLElement) {
   const state: TransformState = {
     x: 0,
     y: 0,
-    scale: 0.5,
+    scale: 1,
   };
 
   // 타겟의 상태 값 수정 및 렌더링
@@ -22,5 +22,6 @@ export function touchInit(screen: HTMLElement, target: HTMLElement) {
     return state;
   };
 
+  // target.style.transformOrigin = "top left";
   pinchZoom({ screen, setState, getState });
 }
